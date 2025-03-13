@@ -1,0 +1,37 @@
+import { defineConfig } from 'cypress';
+import { devServer } from '@cypress/vite-dev-server';
+import { resolve } from 'path';
+
+export default defineConfig({
+  viewportWidth: 1280,
+  viewportHeight: 720,
+  video: false,
+  screenshotOnRunFailure: false,
+  
+  component: {
+    devServer(devServerConfig) {
+      return devServer({
+        ...devServerConfig,
+        framework: 'react',
+        viteConfig: {
+          resolve: {
+            alias: {
+              '@': resolve(__dirname, './client/src')
+            }
+          }
+        }
+      });
+    },
+    specPattern: 'cypress/component/**/*.cy.{js,jsx,ts,tsx}',
+    supportFile: 'cypress/support/component.js'
+  },
+  
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
+    supportFile: 'cypress/support/e2e.js',
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    }
+  }
+});
